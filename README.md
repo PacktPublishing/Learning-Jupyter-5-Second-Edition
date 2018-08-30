@@ -9,7 +9,7 @@ This is the code repository for [Learning Jupyter 5, Second Edition](https://www
 ## What is this book about?
 The Jupyter Notebook allows you to create and share documents that contain live code, equations, visualizations, and explanatory text. The Jupyter Notebook system is extensively used in domains such as data cleaning and transformation, numerical simulation, statistical modeling, and machine learning. Learning Jupyter 5 will help you get to grips with interactive computing using real-world examples.
 
-This book covers the following exciting features: <First 5 What you'll learn points>
+This book covers the following exciting features: 
 * Install and run the Jupyter Notebook system on your machine
 * Implement programming languages such as R, Python, Julia, and JavaScript with the Jupyter Notebook
 * Use interactive widgets to manipulate and visualize data in real time
