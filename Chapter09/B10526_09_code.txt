@@ -1,0 +1,177 @@
+--------------------------------------------------------------------------
+-- first widget
+from ipywidgets import *
+from IPython.display import display
+
+slider = widgets.FloatSlider()
+message = widgets.Text(value = 'Hello World')
+container = widgets.Box(children = (slider, message))
+container.layout.border = '1px black solid'
+
+display(container)
+--------------------------------------------------------------------------
+-- interact
+from ipywidgets import interact
+
+# define a function to work with (cubes the number)
+def myfunction(arg):
+    return arg+1
+
+#take values from slidebar and apply to function provided 
+interact(myfunction, arg=9);
+
+--------------------------------------------------------------------------
+-- interact checkbox
+from ipywidgets import interact
+
+def myfunction(x):
+    return x
+
+# the second argument defines which of the interact widgets we are using
+interact(myfunction, x=False);
+
+--------------------------------------------------------------------------
+-- interact text box
+from ipywidgets import interact
+
+def myfunction(x):
+    return x
+
+#since argument is a text string, interact generates a textbox control for it
+interact(myfunction, x= "Hello World");
+
+
+--------------------------------------------------------------------------
+-- interact dropdown
+from ipywidgets import interact
+
+def myfunction(x):
+    return x
+
+interact(myfunction, x=['red','green']);
+
+--------------------------------------------------------------------------
+-- interactive widget
+from ipywidgets import interactive
+from IPython.display import display
+
+def myfunction(x):
+    return x
+
+w = interactive(myfunction, x= "Hello World ");
+
+display(w)
+
+--------------------------------------------------------------------------
+-- progress bar widget
+import ipywidgets as widgets
+
+widgets.FloatProgress(
+    value=45,
+    min=0,
+    max=100,
+    step=5,
+    description='Percent:',
+)
+
+--------------------------------------------------------------------------
+
+import ipywidgets as widgets 
+from IPython.display import display 
+w = widgets.Dropdown( 
+    options={'Pen': 7732, 'Pencil': 102, 'Pad': 33331}, 
+    description='Item:', 
+) 
+display(w) 
+w.value 
+--------------------------------------------------------------------------
+-- widget textbox
+from ipywidgets import widgets
+from IPython.display import display
+
+#take the text from the box, define variable for handler
+text = widgets.Text()
+
+#display it
+display(text)
+
+def handle_submit(sender):
+    print(text.value)
+
+#when we hit return in the textbox call upon the handler
+text.on_submit(handle_submit)
+
+--------------------------------------------------------------------------
+-- button widget
+from ipywidgets import widgets
+from IPython.display import display
+
+button = widgets.Button(description="Submit");
+display(button)
+
+def on_button_clicked(widget):
+    print("Clicked Button:" + widget.description);
+    
+button.on_click(on_button_clicked);
+
+
+--------------------------------------------------------------------------
+-- widget properties
+from ipywidgets import *
+w = IntSlider()
+w.keys
+
+--------------------------------------------------------------------------
+-- adjust property
+from ipywidgets import *
+Text(value='You can not change this text!', disabled=True)
+
+
+--------------------------------------------------------------------------
+
+from ipywidgets import * 
+w = IntSlider() 
+original = w.value 
+w.value = 5 
+original, w.value 
+
+
+--------------------------------------------------------------------------
+-- widget events
+from ipywidgets import widgets
+from IPython.display import display
+
+button = widgets.Button(description="Click Me!")
+display(button)
+
+def on_button_clicked(b):
+    print("Button clicked.")
+
+button.on_click(on_button_clicked)
+
+--------------------------------------------------------------------------
+-- widget container 2
+from ipywidgets import *
+from IPython.display import display
+
+container = widgets.Box()
+container.layout.border = '1px black solid'
+display(container)
+
+slider = widgets.FloatSlider()
+message = widgets.Text(value='Hello World')
+container.children=[slider, message]
+
+
+--------------------------------------------------------------------------
+-- 
+--------------------------------------------------------------------------
+-- 
+--------------------------------------------------------------------------
+-- 
+
+--------------------------------------------------------------------------
+-- 
+
+--------------------------------------------------------------------------
+-- 

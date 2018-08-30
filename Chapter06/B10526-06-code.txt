@@ -1,0 +1,238 @@
+------------------------------------------------------------------
+-- hello world
+var msg = "Hello, World!"
+console.log(msg)
+
+------------------------------------------------------------------
+-- read csv
+
+var fs = require("fs");
+var d3 = require("d3");
+var _ = require("lodash");
+var _ = require("isomorphic-fetch");
+
+//read and parse the animals file
+console.log("Animal\tWeight");
+d3.csv("http://www.dantoomeysoftware.com/data/animals.csv", 
+function(data) {
+    console.log(data.name + '\t' + data.avg_weight);
+});
+
+
+
+
+
+------------------------------------------------------------------
+-- stats analysis
+const stats = require("stats-analysis");
+var arr = [98, 98.6, 98.4, 98.8, 200, 120, 98.5];
+
+//standard deviation
+var my_stddev = stats.stdev(arr).toFixed(2);
+
+//mean
+var my_mean = stats.mean(arr).toFixed(2);
+
+//median
+var my_median = stats.median(arr);
+
+//median absolute deviation
+var my_mad = stats.MAD(arr);
+
+// Get the index locations of the outliers in the data set
+var my_outliers = stats.indexOfOutliers(arr);
+
+// Remove the outliers
+var my_without_outliers = stats.filterOutliers(arr);
+
+//display our stats
+console.log("Raw data is ", arr);
+console.log("Standard Deviation is ", my_stddev);
+console.log("Mean is ", my_mean);
+console.log("Median is ", my_median);
+console.log("Median Abs Deviation is " + my_mad);
+console.log("The outliers of the data set are ", my_outliers);
+console.log("The data set without outliers is ", my_without_outliers);
+------------------------------------------------------------------
+//load the JSON dataset 
+//http://www.carqueryapi.com/api/0.3/?callback=?&cmd=getModels&make=ford 
+var fords = require('/Users/dtoomey/fords.json'); 
+ 
+//display how many Ford models are in our data set 
+console.log("There are " + fords.Models.length + " Ford models in the data set"); 
+ 
+//loop over the set 
+var index = 1 
+for(var i=0; i<fords.Models.length; i++) { 
+     
+    //get this model 
+    var model = fords.Models[i]; 
+     
+    //pull it's name 
+    var name = model.model_name; 
+     
+    //if the model name does not have numerics in it 
+    if(! name.match(/[0-9]/i)) { 
+        //display the model name 
+        console.log("Model " + index + " is a " + name); 
+        index++; 
+    } 
+     
+    //only display the first 5 
+    if (index>5) break; 
+}
+
+------------------------------------------------------------------
+-- javascript canvas
+// create a canvas 200 by 200 pixels
+var Canvas = require("canvas")
+, Image = Canvas.Image
+, canvas = new Canvas(200, 200)
+, ctx = canvas.getContext('2d')
+, string = "Jupyter!";
+
+// place our string on the canvas
+ctx.font = '30px Impact';
+ctx.rotate(.1);
+ctx.fillText(string, 50, 100);
+
+var te = ctx.measureText(string);
+ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+ctx.beginPath();
+ctx.lineTo(50, 102);
+ctx.lineTo(50 + te.width, 102);
+ctx.stroke();
+
+//create an html img tag, with embedded graphics
+console.log('<img src="' + canvas.toDataURL() + '" />');
+
+------------------------------------------------------------------
+-- canvas html
+
+<html>
+<body>
+<img src="data:image/png;base64,iVBORw0KGgo...CC" />
+</body>
+</head>
+
+
+------------------------------------------------------------------
+//set random seed 
+var seedrandom = require('seedrandom'); 
+var rng = seedrandom('Jupyter'); 
+//setup plotly 
+var plotly = require('plotly')(username="<username>", api_key="<key>") 
+var x = []; 
+for (var i = 0; i < 500; i ++) { 
+    x[i] = Math.random(); 
+} 
+require('plotly')(username, api_key); 
+var data = [ 
+  { 
+    x: x, 
+    type: "histogram" 
+  } 
+]; 
+var graphOptions = {filename: "basic-histogram", fileopt: "overwrite"}; 
+plotly.plot(data, graphOptions, function (err, msg) { 
+    console.log(msg); 
+}); 
+
+------------------------------------------------------------------
+-- threads
+//thread function - invoked for every number in items array
+function async(arg, callback) {
+  console.log('cube \''+arg+'\', and return 2 seconds later');
+  setTimeout(function() { callback(arg * 3); }, 2000);
+}
+
+//function called once - after all threads complete
+function final() { console.log('Done', results); }
+
+//list of numbers to operate upon
+var items = [ 0, 1, 1, 2, 3, 5, 7, 11 ];
+
+//results of each step
+var results = [];
+
+//loop the drives the whole process
+items.forEach(function(item) {
+  async(item, function(result){
+    results.push(result);
+    if(results.length == items.length) {
+      final();
+    }
+  })
+});
+
+
+------------------------------------------------------------------
+-- decision tree
+//Import the modules
+var DecisionTree = require('decision-tree');
+var fs = require("fs");
+var d3 = require("d3");
+var util = require('util');
+
+//read in the car/mpg file
+fs.readFile("/Users/dtoomey/car-mpg.csv", "utf8", function(error, data) {
+    
+    //parse out the csv into a dataset
+    var dataset = d3.tsv.parse(data);
+    
+    //display on screen - just for debugging
+    //console.log(JSON.stringify(dataset));
+
+    var rows = dataset.length;
+    console.log("rows = " + rows);
+    var training_size = rows * 2 / 3;
+    console.log("training_size = " + training_size);
+    var test_size = rows - training_size;
+    console.log("test_size = " + test_size);
+
+    //Prepare training dataset
+    var training_data = dataset.slice(1, training_size);
+
+    //Prepare test dataset
+    var test_data = dataset.slice(training_size, rows);
+
+    //Setup Target Class used for prediction
+    var class_name = "mpg";
+
+    //Setup Features to be used by decision tree
+    var features = ["cylinders","displacement","horsepower", "weight", "acceleration", "modelyear", "maker"];
+
+    //Create decision tree and train model
+    var dt = new DecisionTree(training_data, class_name, features);
+    console.log("Decision Tree is " + util.inspect(dt, {showHidden: false, depth: null}));
+
+    //Predict class label for an instance
+    var predicted_class = dt.predict({
+        cylinders: 8,
+        displacement: 400,
+        horsepower: 200,
+        weight: 4000,
+        acceleration: 12,
+        modelyear: 70,
+        maker: "US"
+    });
+    console.log("Predicted Class is " + util.inspect(predicted_class, {showHidden: false, depth: null}));
+
+    //Evaluate model on a dataset
+    var accuracy = dt.evaluate(test_data);
+    console.log("Accuracy is " + accuracy);
+
+    //Export underlying model for visualization or inspection
+    var treeModel = dt.toJSON();
+    console.log("Decision Tree JSON is " + util.inspect(treeModel, {showHidden: false, depth: null}));
+});
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,123 @@
+##############################################################
+# basic R
+
+myString <- "Hello, World!"
+print (myString)
+
+##############################################################
+# r dataset access
+
+dataset(iris)
+summary(iris)
+plot(iris)
+
+##############################################################
+# R persp
+
+example(persp)
+
+##############################################################
+# r latticecloud
+# make sure lattice package is installed
+install.packages("lattice")
+
+# in a standalone R script you would have a command to download the lattice library 
+# – this is not needed in Jupyter
+library("lattice")
+
+# use the automobile data from ics.edu
+mydata <- read.table("http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data")
+
+# define more meaningful column names for the display
+colnames(mydata) <- c("mpg", "cylinders", "displacement", "horsepower", "weight", "acceleration", "model.year", "origin", "car.name")
+
+# 3-D plot with number of cylinders on x axis, weight of the vehicle on the y axis and
+# miles per gallon on the z axis.
+cloud(mpg~cylinders*weight, data=mydata)
+
+##############################################################
+# r cluster analysis
+
+# load the wheat data set from uci.edu
+wheat <- read.csv("http://archive.ics.uci.edu/ml/machine-learning-databases/00236/seeds_dataset.txt", sep="\t")
+
+# define useful column names
+colnames(wheat) <-c("area", "perimeter", "compactness", "length", "width", "asymmetry", "groove", "undefined")
+
+# exclude incomplete cases from the data
+wheat <- wheat[complete.cases(wheat),]
+
+# calculate the clusters
+set.seed(117) #set seed so we can reproduce results
+fit <- kmeans(wheat, 5)
+fit
+
+##############################################################
+# r forecasting
+
+library(forecast)
+
+fraser <- scan("fraser.txt")
+
+plot(fraser)
+
+fraser.ts <- ts(fraser, frequency=12, start=c(1913,3))
+
+fraser.stl = stl(fraser.ts, s.window="periodic")
+
+monthplot(fraser.stl)
+seasonplot(fraser.ts)
+
+##############################################################
+# r machine learning
+
+housing <- read.table("http://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.data")
+colnames(housing) <- c("CRIM","ZN","INDUS","CHAS","NOX","RM","AGE","DIS","RAD", "TAX", "PRATIO","B","LSTAT", "MDEV")
+summary(housing)
+
+plot(housing)
+
+# order the data by median value
+housing <- housing[order(housing$MDEV),]
+
+#install.packages("caret")
+library("caret")
+
+# set the random seed so we can reproduce results
+set.seed(311)
+
+# take 3/4 of the data for training
+trainingIndices <- createDataPartition(housing$MDEV, p=0.75, list=FALSE)
+
+# split the data
+housingTraining <- housing[trainingIndices,]
+housingTesting <- housing[-trainingIndices,]
+
+# make sure the paritioning is working
+nrow(housingTraining)
+nrow(housingTesting)
+
+# create a linear (regression) model
+linearModel <- lm(MDEV ~ CRIM + ZN + INDUS + CHAS + NOX + RM + AGE + DIS + RAD + TAX + PRATIO + B + LSTAT, data=housingTraining)
+summary(linearModel)
+
+# make predictions using the model and compare with the testing data
+predicted <- predict(linearModel,newdata=housingTesting)
+summary(predicted)
+
+# get a visual indication of the match
+plot(predicted, housingTesting$MDEV)
+abline(lm(predicted ~ housingTesting$MDEV))
+# use a sum of squares to compare
+sumOfSquares <- function(x) {
+    return(sum(x^2))
+}
+
+#make sure it works
+sumOfSquares(1:5)
+#test our model
+diff <- predicted - housingTesting$MDEV
+sumOfSquares(diff)
+
+##############################################################
+##############################################################

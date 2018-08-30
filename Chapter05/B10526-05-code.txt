@@ -1,0 +1,281 @@
+/* ------------------------------------------------*/
+//Java Hello
+String hello = "Hello, Dan"
+hello
+
+/* ------------------------------------------------*/
+//java system out
+
+System.out.println("stdout");
+System.err.println("stderr");
+
+/* ------------------------------------------------*/
+//java optional
+import java.util.Optional;
+
+public class MyOptional {
+    
+    public static void main() {
+        MyOptional program = new MyOptional();
+        
+        Integer value1 = null;
+        Integer value2 = 123;
+        
+        //.ofNullable allows null
+        Optional<Integer> a = Optional.ofNullable(value1);
+        
+        //.of does not allow null
+        Optional<Integer> b = Optional.of(value2);
+        System.out.println(program.sum(a,b));
+    }
+    
+    public Integer sum(Optional<Integer> first, Optional<Integer> second) {
+        System.out.println("First parameter present " + first.isPresent());
+        System.out.println("Second parameter present " + second.isPresent());
+        Integer value1 = first.orElse(1);
+        Integer value2 = second.orElse(1);
+        return value1 + value2;
+    }
+}
+
+new MyOptional().main();
+
+/* ------------------------------------------------*/
+//java streams
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class MyStreams {
+
+    static Stream<Integer> build(Integer i) {
+        List<Integer> t = new ArrayList<Integer>();
+        t.add(i);
+        t.add(i*i);
+        t.add(i*i*i);
+        return t.stream();
+    }
+    
+    public static void main() {
+        List<Integer> numbers = new ArrayList<Integer>();
+        numbers.add(3);
+        numbers.add(-1);
+        numbers.add(3);
+        numbers.add(17);
+        numbers.add(7);
+    
+        System.out.println("---------------------");
+        System.out.println("Numbers greater than 2");
+        numbers.stream()
+            .filter(number -> number > 2)
+            .forEach(number -> System.out.println(number));
+
+        System.out.println("---------------------");
+        System.out.println("number size = " + numbers.stream().count());
+
+        System.out.println("---------------------");
+        Integer big = numbers.stream().max((n1,n2) -> Integer.compare(n1, n2)).get();
+        System.out.println("biggest number = " + big);
+
+        System.out.println("---------------------");
+        Integer small = numbers.stream().min((n1,n2) -> Integer.compare(n1, n2)).get();
+        System.out.println("smallest number = " + small);
+
+        System.out.println("---------------------");
+        System.out.println("Sorted");
+        numbers.stream()
+            .sorted((n1,n2) -> Integer.compare(n1, n2))
+            .forEach(number -> System.out.println(number));
+
+        System.out.println("---------------------");
+        Integer total = numbers.stream()
+            .collect(Collectors.summingInt(i -> i))
+            .intValue();
+        System.out.println("Total " + total);
+
+        System.out.println("---------------------");
+        String summary = numbers.stream()
+            .collect(Collectors.summarizingInt(i -> i))
+            .toString();
+        System.out.println("Summary " + summary);
+
+        System.out.println("---------------------");
+        System.out.println("Squares");
+        numbers.stream()
+            .map(i -> i * i)
+            .forEach(i -> System.out.println(i));
+
+        System.out.println("---------------------");
+        System.out.println("Growth");
+        numbers.stream()
+            .flatMap(i -> build(i))
+            .sorted()
+            .forEach(i -> System.out.println(i));
+
+        System.out.println("---------------------");
+        System.out.println("Distinct growth");
+        numbers.stream()
+            .flatMap(i -> build(i))
+            .sorted()
+            .distinct()
+            .forEach(i -> System.out.println(i));
+    }
+}
+
+new MyStreams().main();
+
+/* ------------------------------------------------*/
+// java iris
+
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class Iris {
+    
+    public Iris(Double sepalLength, Double sepalWidth, Double petalLength, Double petalWidth, String irisClass) {
+        this.sepalLength = sepalLength;
+        this.sepalWidth = sepalWidth;
+        this.petalLength = petalLength;
+        this.petalWidth = petalWidth;
+        this.irisClass = irisClass;
+    }
+    
+    private Double sepalLength;
+    private Double sepalWidth;
+    private Double petalLength;
+    private Double petalWidth;
+    private String irisClass;
+    
+    public Double getSepalLength() {
+        return this.sepalLength;
+    }
+    
+    //other getters and setters TBD
+}
+
+public class JavaIris {
+    
+    public void test() {
+        
+        //file originally at http://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data
+        Path path = FileSystems
+            .getDefault()
+            .getPath("/Users/ToomeyD/iris.csv");
+        List<Iris> irises = load(path);
+        
+        //produce summary statistics for sepal length values
+        String sepalLengthSummary = irises.stream()
+            .collect(Collectors.summarizingDouble(Iris::getSepalLength))
+            .toString();
+        System.out.println("\nSepal Length Summary " + sepalLengthSummary);
+    }
+        
+    public List<Iris> load(Path path) {
+        List<Iris> irises = new ArrayList<Iris>();
+        
+        try (Stream<String> stream = Files.lines(path)) {
+            stream.forEach((line) -> {
+                System.out.println(line);
+
+                //put each field into array
+                List<String> fields = new ArrayList<String>();
+                Pattern.compile(",")
+                    .splitAsStream(line)
+                    .forEach((field) -> fields.add(field));
+
+                //build up the iris values
+                Double sepalLength = new Double(fields.get(0));
+                Double sepalWidth = new Double(fields.get(1));
+                Double petalLength = new Double(fields.get(2));
+                Double petalWidth = new Double(fields.get(3));
+                String irisClass = fields.get(4);
+                Iris iris = new Iris(sepalLength, sepalWidth, petalLength, petalWidth, irisClass);
+
+                //add to array
+                irises.add(iris);
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return irises;
+    }
+}
+
+new JavaIris().test();
+
+/* ------------------------------------------------*/
+//Java collections
+import java.util.Collections;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Comparator;
+
+public class MyCollections {
+    public void test() {
+        List<String> countries = new ArrayList<String>();
+        countries.add("United States");
+        countries.add("Albania");
+        countries.add("Japan");
+        countries.add("China");
+        
+        new MyCollections().sortUsingCollections(countries);
+        System.out.println(countries);
+    }
+    
+    public void sortUsingCollections(List<String> strings) {
+        Collections.sort(strings, (s1, s2) -> s1.compareTo(s2));
+    }
+}
+
+new MyCollections().test();
+
+/* ------------------------------------------------*/
+//java lambdas
+public class MyLambdas {
+    
+    //invoke a function
+    private double perform(int a, int b, MyInterface myInterface) {
+        return myInterface.someOperation(a, b);
+    }
+    
+    //define an interface for any operation
+    interface MyInterface {
+        double someOperation(int a, int b);
+    }
+    
+    public static void test() {
+    
+        MyLambdas tester = new MyLambdas();
+        
+        //different ways to express Lambda functions
+        
+        //use argument types
+        MyInterface powerTyped = (int a, int b) -> Math.pow(a,b);
+        
+        //no argument types
+        MyInterface powertNotTyped = (a, b) -> Math.pow(a,b);
+        
+        //return statement wrapped with curly braces
+        MyInterface powerReturnCurlyBraced = (a, b) -> { return Math.pow(a,b); };
+        
+        System.out.println("2 ^ 3 = " + tester.perform(2,3,powerTyped));
+        System.out.println("2 ^ 3 = " + tester.perform(2,3,powertNotTyped));
+        System.out.println("2 ^ 3 = " + tester.perform(2,3,powerReturnCurlyBraced));
+    }
+}
+
+new MyLambdas().test();

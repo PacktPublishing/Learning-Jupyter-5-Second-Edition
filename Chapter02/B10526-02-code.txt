@@ -1,0 +1,103 @@
+##################################################################
+### first python script
+##################################################################
+name = "Dan"
+age = 37
+print(name + ' is ' + str(age) + ' years old.')
+
+##################################################################
+### python data access
+##################################################################
+
+# import the datasets package
+from sklearn import datasets
+
+# pull in the iris data
+iris_dataset = datasets.load_iris()
+# grab the first two columns of data
+X = iris_dataset.data[:, :2]
+
+# calculate some basic statistics
+x_count = len(X.flat)
+x_min = X[:, 0].min() - .5
+x_max = X[:, 0].max() + .5
+x_mean = X[:, 0].mean()
+
+# display our results
+x_count, x_min, x_max, x_mean
+
+##################################################################
+### python pandas
+##################################################################
+
+# in this example we are just using csv handling, but pandas have much more
+from pandas import *
+
+# load the machine learning training data set
+training_set = read_csv('train.csv')
+training_set.head()
+
+# split the data by sex
+male = training_set[training_set.Sex == 'male']
+female = training_set[training_set.Sex =='female']
+
+# calculate survival rates based on sex
+womens_survival_rate = float(sum(female.Survived))/len(female)
+mens_survival_rate = float(sum(male.Survived))/len(male)
+womens_survival_rate, mens_survival_rate
+
+##################################################################
+### python graphics
+##################################################################
+
+import pandas
+import matplotlib
+
+%matplotlib inline
+
+# define our two columns of data
+baby_name = ['Alice','Charles','Diane','Edward']
+number_births = [96, 155, 66, 272]
+
+# create a dataset from the to sets
+dataset = list(zip(baby_name,number_births))
+dataset
+
+# create a Python dataframe from the dataset
+df = pandas.DataFrame(data = dataset, columns=['Name', 'Number'])
+df
+
+# plot the data
+df['Number'].plot()
+
+##################################################################
+### python random numbers
+##################################################################
+
+# using pylab statistics and histogram
+import pylab
+import random
+
+# set random seed so we can reproduce results
+random.seed(113)
+samples = 1000
+
+# declare our dataset store
+dice = []
+
+# generate and save the samples
+for i in range(samples):
+    total = random.randint(1,6) + random.randint(1,6)
+    dice.append(total)
+
+# compute some statistics on the dice throws
+print("Throw two dice", samples, "times.")
+print("Mean of", pylab.mean(dice))
+print("Median of", pylab.median(dice))
+print("Std Dev of", pylab.std(dice))
+
+# display a histogram of the results
+pylab.hist(dice, bins= pylab.arange(1.5,12.6,1.0))
+pylab.xlabel("Pips")
+pylab.ylabel("Count")
+pylab.show()
