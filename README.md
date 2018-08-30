@@ -1,4 +1,4 @@
-# Book Name
+# Learning Jupyter 5, Second Edition
 
 <a href="https://www.packtpub.com/big-data-and-business-intelligence/learning-jupyter-5-second-edition?utm_source=github&utm_medium=repository&utm_campaign=9781789137408"><img src="https://www.packtpub.com/sites/default/files/B10526_MockupCover.png" alt="Learning Jupyter 5, Second Edition" height="256px" align="right"></a>
 
