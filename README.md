@@ -38,6 +38,7 @@ cell_config.update(code_patch)
 ```
 
 **Following is what you need for this book:**
+
 Learning Jupyter 5 is for developers, data scientists, machine learning users, and anyone working on data analysis or data science projects across different teams. Data science professionals will also find this book useful for performing technical and scientific computing collaboratively.
 
 With the following software and hardware list you can run all code files present in the book (Chapter 1-12).
