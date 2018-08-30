@@ -69,7 +69,7 @@ With the following software and hardware list you can run all code files present
 
 * Jupyter Cookbook [[Packt]](https://www.packtpub.com/big-data-and-business-intelligence/jupyter-cookbook?utm_source=github&utm_medium=repository&utm_campaign=9781788839440) [[Amazon]](https://www.amazon.com/dp/1788839447)
 
-## Get to Know the Author(s)
+## Get to Know the Author
 **Dan Toomey** has been developing application software for over 20 years. He has worked in a variety of industries and companies, in roles from sole contributor to VP/CTO-level. For the last few years he has been contracting for companies in the eastern Massachusetts area. Dan has been contracting under Dan Toomey Software Corp. Dan has also written R for Data Science, Jupyter for Data Sciences, and the Jupyter Cookbook, all with Packt.
 
 
